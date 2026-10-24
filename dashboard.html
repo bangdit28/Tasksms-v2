@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal — Numex IPRN (API Live Integrated)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+
+    <!-- Mobile Drawer Overlay -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+    <!-- SIDEBAR / DRAWER NAVIGATION -->
+    <aside id="sidebarDrawer" class="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between -translate-x-full md:translate-x-0 transition-transform duration-300 md:static md:h-screen">
+        <div class="space-y-8">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-satellite-dish text-white text-base"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-extrabold text-white">Numex<span class="text-emerald-400">IPRN</span></span>
+                        <span class="block text-[10px] text-slate-400 font-mono tracking-wider">LIVE API ENGINE</span>
+                    </div>
+                </a>
+                <button id="btnCloseDrawer" class="md:hidden text-slate-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1.5 text-xs font-semibold">
+                <button id="nav-dashboard" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-white bg-slate-800 border border-slate-700/80 shadow-sm">
+                    <i class="fa-solid fa-chart-line text-emerald-400 text-sm"></i>
+                    <span>Dashboard & Live CDR</span>
+                </button>
+                <button id="nav-ambil-nomor" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-sim-card text-indigo-400 text-sm"></i>
+                    <span>Ambil Nomor Virtual</span>
+                    <span class="ml-auto text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">API</span>
+                </button>
+                <button id="nav-wallet" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-wallet text-emerald-400 text-sm"></i>
+                    <span>Dompet & Saldo (Wallet)</span>
+                </button>
+                <button id="nav-console" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-terminal text-amber-400 text-sm"></i>
+                    <span>Global IPRN Feed</span>
+                    <span class="ml-auto w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="pt-6 border-t border-slate-800 space-y-4">
+            <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold text-xs border border-slate-700">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div class="leading-none">
+                        <div class="text-xs font-bold text-white truncate max-w-[120px]" id="userEmailDisplay">Loading...</div>
+                        <span class="text-[10px] text-emerald-400 font-mono">API: 2oo9.cloud</span>
+                    </div>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="Provider API Online"></span>
+            </div>
+
+            <button id="btnLogout" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-800 hover:bg-red-500/10 hover:border-red-500/30 text-slate-400 hover:text-red-400 text-xs font-bold transition-all">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Keluar (Logout)</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+        
+        <!-- Header Top -->
+        <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-30 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button id="btnOpenDrawer" class="md:hidden p-2 text-slate-400 hover:text-white rounded-lg bg-slate-800 border border-slate-700">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+                <h1 id="pageTitle" class="text-base font-bold text-white">Dashboard & Live CDR</h1>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-[11px] font-mono">
+                    <span class="text-slate-400">Sync Provider:</span>
+                    <span class="text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        Aktif Tiap 5d
+                    </span>
+                </div>
+
+                <button id="btnQuickWallet" class="text-xs font-bold px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span class="liveBalanceUSD">$0.000</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Body Views -->
+        <main class="p-6 md:p-8 space-y-8 flex-1">
+
+            <!-- ================= VIEW 1: DASHBOARD ================= -->
+            <div id="view-dashboard" class="view-panel space-y-8">
+                <!-- Metrics -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+                        <div class="text-xs text-slate-400 font-medium flex justify-between items-center">
+                            <span>Saldo Real-Time</span>
+                            <span class="text-emerald-400 text-[10px] font-mono">Auto-Sync</span>
+                        </div>
+                        <div class="text-2xl font-black text-emerald-400 font-mono liveBalanceUSD">$0.000</div>
+                        <div class="text-[11px] text-slate-500 font-mono liveBalanceIDR">~Rp 0</div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+                        <div class="text-xs text-slate-400 font-medium">OTP Berhasil Diterima</div>
+                        <div class="text-2xl font-black text-white font-mono" id="totalOtpCount">0 Pesan</div>
+                        <div class="text-[11px] text-emerald-400">Live dari /success-otp</div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+                        <div class="text-xs text-slate-400 font-medium">Nomor Dialokasikan</div>
+                        <div class="text-2xl font-black text-white font-mono" id="activeNumbersCount">0 Line</div>
+                        <div class="text-[11px] text-indigo-400">Alokasi via /getnum</div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+                        <div class="text-xs text-slate-400 font-medium">Status API Gateway</div>
+                        <div class="text-2xl font-black text-emerald-400 font-mono">ONLINE</div>
+                        <div class="text-[11px] text-slate-500 font-mono truncate">2oo9.cloud connected</div>
+                    </div>
+                </div>
+
+                <!-- Live Stream CDR Feed Table -->
+                <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <h3 class="font-bold text-white text-sm">Call Detail Record (CDR) — SMS OTP Masuk ke Akun Anda</h3>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">Auto Poll /success-otp</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300 font-mono">
+                            <thead class="bg-slate-950 text-slate-500 uppercase text-[11px] border-b border-slate-800">
+                                <tr>
+                                    <th class="py-3.5 px-5">Waktu</th>
+                                    <th class="py-3.5 px-5">Nomor Telepon</th>
+                                    <th class="py-3.5 px-5">Isi Pesan OTP</th>
+                                    <th class="py-3.5 px-5 text-right">Revenue Masuk</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800" id="cdrTableBody">
+                                <tr>
+                                    <td colspan="4" class="py-8 text-center text-slate-500 font-sans">
+                                        Menunggu SMS OTP masuk dari provider... Sistem mengecek otomatis setiap 5 detik.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: AMBIL NOMOR (POST /getnum) ================= -->
+            <div id="view-ambil-nomor" class="view-panel space-y-8 hidden">
+                <div class="p-6 md:p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sim-card text-emerald-400"></i>
+                            <span>Alokasi Nomor dari Provider API (POST /getnum)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Sistem akan meminta nomor langsung dari rute gateway IPRN menggunakan kredensial API Anda.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
+                        <div class="md:col-span-5 space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Pilih Range ID (RID) / Layanan Aktif:</label>
+                            <select id="selectRangeId" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500">
+                                <option value="26134" data-country="United Kingdom" data-rate="0.018">🇬🇧 Range 26134 (United Kingdom) — Est. $0.018</option>
+                                <option value="22501" data-country="Ivory Coast" data-rate="0.024">🇨🇮 Range 22501 (Ivory Coast) — Est. $0.024</option>
+                                <option value="8801" data-country="Bangladesh" data-rate="0.015">🇧🇩 Range 8801 (Bangladesh) — Est. $0.015</option>
+                                <option value="custom">-- Masukkan Range ID Manual --</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-4 space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Input Range ID Manual (Tanpa XXX):</label>
+                            <input type="text" id="manualRidInput" placeholder="Contoh: 26134" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+                        </div>
+
+                        <div class="md:col-span-3">
+                            <button id="btnRequestNumber" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                <span>Alokasikan Nomor</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Nomor Virtual User -->
+                <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden">
+                    <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+                        <h3 class="font-bold text-white text-sm">Nomor Virtual yang Berhasil Anda Dapatkan</h3>
+                        <span class="text-xs text-slate-400 font-mono">Tersimpan di Cloud</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-950 text-slate-400 uppercase font-mono text-[11px] border-b border-slate-800">
+                                <tr>
+                                    <th class="py-3.5 px-5">Nomor Lengkap</th>
+                                    <th class="py-3.5 px-5">Negara</th>
+                                    <th class="py-3.5 px-5">Operator</th>
+                                    <th class="py-3.5 px-5">Range ID (RID)</th>
+                                    <th class="py-3.5 px-5 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 font-mono" id="activeNumbersTable">
+                                <tr>
+                                    <td colspan="5" class="py-6 text-center text-slate-500 font-sans">Belum ada nomor yang dialokasikan. Klik "Alokasikan Nomor" di atas!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: WALLET ================= -->
+            <div id="view-wallet" class="view-panel space-y-8 hidden">
+                <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-slate-900 to-emerald-950/30 border border-emerald-500/40 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs uppercase tracking-wider text-emerald-400 font-bold font-mono">SALDO REAL-TIME TERKUMPUL DARI API</span>
+                        <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-0.5 rounded-full font-mono border border-emerald-500/30">Min. WD: $2.00</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-4xl md:text-5xl font-black text-white font-mono tracking-tight liveBalanceUSD">$0.000</div>
+                        <div class="text-sm text-slate-400 font-mono liveBalanceIDR">~Rp 0</div>
+                    </div>
+                    <p class="text-xs text-slate-400">Setiap OTP yang terdeteksi dari endpoint provider langsung dikonversi ke saldo akun Anda.</p>
+                </div>
+
+                <!-- Form Penarikan -->
+                <div class="p-6 md:p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-money-bill-transfer text-emerald-400"></i>
+                        <span>Tarik Saldo ke Rekening / E-Wallet</span>
+                    </h3>
+
+                    <form id="formWithdraw" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Metode Penarikan:</label>
+                            <select id="wdMethod" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-emerald-500">
+                                <option value="DANA">DANA (E-Wallet)</option>
+                                <option value="GoPay">GoPay (E-Wallet)</option>
+                                <option value="BCA">Bank BCA</option>
+                                <option value="USDT">USDT Crypto (TRC-20)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Nomor Rekening / Akun Tujuan:</label>
+                            <input type="text" id="wdAccount" required placeholder="0812xxxx atau Alamat USDT" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Nominal Tarik (USD):</label>
+                            <div class="relative">
+                                <input type="number" id="wdAmount" step="0.01" min="2" placeholder="Min. 2.00" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
+                                <button type="submit" class="mt-3 w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wide transition-all shadow-md shadow-emerald-500/20">
+                                    Konfirmasi Tarik Dana
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 4: GLOBAL CONSOLE FEED (GET /console) ================= -->
+            <div id="view-console" class="view-panel space-y-6 hidden">
+                <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Global Live Feed (Trafik Seluruh Dunia 15 Menit Terakhir)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Data langsung dari endpoint provider <code>GET /console</code> (Semua trafik internasional).</p>
+                    </div>
+                    <button id="btnRefreshConsole" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Manual
+                    </button>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden">
+                    <table class="w-full text-left text-xs text-slate-300 font-mono">
+                        <thead class="bg-slate-950 text-slate-400 uppercase text-[11px] border-b border-slate-800">
+                            <tr>
+                                <th class="py-3.5 px-5">Waktu</th>
+                                <th class="py-3.5 px-5">Range Hit</th>
+                                <th class="py-3.5 px-5">Layanan</th>
+                                <th class="py-3.5 px-5">Cuplikan Pesan OTP</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800" id="globalConsoleTable">
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-slate-500 font-sans">Memuat trafik global dari provider...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Firebase & 3rd Party API Integration Script -->
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { 
+            ref, 
+            onValue, 
+            push, 
+            set, 
+            runTransaction, 
+            query, 
+            limitToLast 
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        // ================= KREDENSIAL API PIHAK KETIGA =================
+        const API_KEY = "MEE8RE4EMOI";
+        const API_BASE = "https://api.2oo9.cloud/MXS47FLFX0U/tness/@public/api";
+        const USD_TO_IDR = 16000;
+
+        let currentUser = null;
+        let currentBalance = 0.000;
+        const processedOtpIds = new Set(); // Mencegah duplikasi hitungan komisi
+
+        // Header Standar
+        const apiHeaders = {
+            "Content-Type": "application/json",
+            "mauthapi": API_KEY
+        };
+
+        // 1. Cek Sesi Auth Firebase
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "auth.html?mode=login";
+            } else {
+                currentUser = user;
+                document.getElementById('userEmailDisplay').innerText = user.email;
+                listenToUserData(user.uid);
+                startApiPolling();
+                loadGlobalConsole();
+                loadLiveAccess();
+            }
+        });
+
+        // Logout
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "auth.html?mode=login");
+        });
+
+        // 2. Realtime Listener Firebase (Saldo & Nomor)
+        function listenToUserData(uid) {
+            // Pantau Saldo
+            onValue(ref(db, `users/${uid}`), (snap) => {
+                const data = snap.val();
+                if (data) {
+                    currentBalance = parseFloat(data.balance || 0);
+                    document.querySelectorAll('.liveBalanceUSD').forEach(el => el.innerText = `$${currentBalance.toFixed(3)}`);
+                    document.querySelectorAll('.liveBalanceIDR').forEach(el => el.innerText = `~Rp ${Math.round(currentBalance * USD_TO_IDR).toLocaleString('id-ID')}`);
+                }
+            });
+
+            // Pantau Nomor Virtual Tersimpan
+            onValue(ref(db, `users/${uid}/numbers`), (snap) => {
+                const nums = snap.val();
+                const table = document.getElementById('activeNumbersTable');
+                table.innerHTML = '';
+
+                if (nums) {
+                    const keys = Object.keys(nums).reverse();
+                    document.getElementById('activeNumbersCount').innerText = `${keys.length} Line`;
+                    keys.forEach(k => {
+                        const item = nums[k];
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-slate-800/30";
+                        row.innerHTML = `
+                            <td class="py-3.5 px-5 font-bold text-white">${item.full_number}</td>
+                            <td class="py-3.5 px-5 font-sans">${item.country || '-'}</td>
+                            <td class="py-3.5 px-5 font-sans">${item.operator || '-'}</td>
+                            <td class="py-3.5 px-5 font-mono text-emerald-400 font-bold">${item.rid}</td>
+                            <td class="py-3.5 px-5 text-right font-sans">
+                                <button onclick="navigator.clipboard.writeText('${item.full_number}'); alert('Nomor disalin!')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-[11px]">Salin</button>
+                            </td>
+                        `;
+                        table.appendChild(row);
+                    });
+                } else {
+                    table.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500 font-sans">Belum ada nomor yang dialokasikan.</td></tr>`;
+                }
+            });
+
+            // Pantau Log OTP Tersimpan
+            onValue(query(ref(db, `users/${uid}/logs`), limitToLast(50)), (snap) => {
+                const logs = snap.val();
+                const tableBody = document.getElementById('cdrTableBody');
+                tableBody.innerHTML = '';
+
+                if (logs) {
+                    const keys = Object.keys(logs).reverse();
+                    document.getElementById('totalOtpCount').innerText = `${keys.length} Pesan`;
+
+                    keys.forEach(key => {
+                        const item = logs[key];
+                        processedOtpIds.add(item.otp_id); // Tandai agar tidak dihitung ganda
+                        const date = new Date(item.time).toLocaleTimeString();
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-slate-800/40";
+                        row.innerHTML = `
+                            <td class="py-3.5 px-5 text-slate-500">${date}</td>
+                            <td class="py-3.5 px-5 text-white font-bold">${item.number}</td>
+                            <td class="py-3.5 px-5 text-slate-300 font-sans">${item.message}</td>
+                            <td class="py-3.5 px-5 text-right text-emerald-400 font-bold font-mono">+$${parseFloat(item.rate || 0.018).toFixed(3)}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-500 font-sans">Menunggu SMS OTP masuk dari provider API...</td></tr>`;
+                }
+            });
+        }
+
+        // ================= ENDPOINT 1: POST /getnum (Alokasi Nomor) =================
+        document.getElementById('btnRequestNumber').addEventListener('click', async () => {
+            if (!currentUser) return;
+
+            const btn = document.getElementById('btnRequestNumber');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Menghubungi API...`;
+
+            let rid = document.getElementById('manualRidInput').value.trim();
+            if (!rid) {
+                rid = document.getElementById('selectRangeId').value;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/getnum`, {
+                    method: "POST",
+                    headers: apiHeaders,
+                    body: JSON.stringify({ rid: rid })
+                });
+
+                const json = await res.json();
+
+                if (json.meta && json.meta.code === 200 && json.data) {
+                    // Simpan nomor ke Firebase Realtime Database
+                    const newNumberRef = push(ref(db, `users/${currentUser.uid}/numbers`));
+                    await set(newNumberRef, {
+                        full_number: json.data.full_number,
+                        national_number: json.data.national_number,
+                        country: json.data.country,
+                        operator: json.data.operator,
+                        rid: rid,
+                        allocatedAt: Date.now()
+                    });
+
+                    alert(`Sukses Mengalokasikan Nomor: ${json.data.full_number} (${json.data.country || 'IPRN Range'})`);
+                } else if (json.meta && json.meta.code === 2946) {
+                    alert(`Stok nomor untuk Range ${rid} sedang habis (Out of stock). Silakan coba Range ID lain.`);
+                } else {
+                    alert(`Gagal Alokasi: ${json.message || 'Error tidak diketahui dari provider'}`);
+                }
+            } catch (err) {
+                console.error("GetNum Error:", err);
+                alert("Gagal menghubungi server API provider. Pastikan koneksi internet stabil.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down mr-1"></i> Alokasikan Nomor`;
+            }
+        });
+
+        // ================= ENDPOINT 2: GET /liveaccess (Ambil Range Aktif) =================
+        async function loadLiveAccess() {
+            try {
+                const res = await fetch(`${API_BASE}/liveaccess`, { headers: apiHeaders });
+                const json = await res.json();
+                if (json.meta && json.meta.code === 200 && json.data && json.data.services) {
+                    const select = document.getElementById('selectRangeId');
+                    // Tambahkan opsi dari live services
+                    json.data.services.forEach(srv => {
+                        if (srv.ranges && srv.ranges.length > 0) {
+                            const cleanRange = srv.ranges[0].replace('XXX', '');
+                            const opt = document.createElement('option');
+                            opt.value = cleanRange;
+                            opt.text = `⚡ Range ${cleanRange} (${srv.sid}) — Aktif Baru Saja`;
+                            select.insertBefore(opt, select.firstChild);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn("Liveaccess fetch silent error:", e);
+            }
+        }
+
+        // ================= ENDPOINT 3: GET /success-otp (Auto-Poll Tiap 5 Detik) =================
+        async function pollSuccessOtp() {
+            if (!currentUser) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/success-otp`, { headers: apiHeaders });
+                const json = await res.json();
+
+                if (json.meta && json.meta.code === 200 && json.data && json.data.otps) {
+                    for (const otp of json.data.otps) {
+                        // Jika OTP belum pernah dicatat, simpan & beri komisi!
+                        if (!processedOtpIds.has(otp.otp_id)) {
+                            processedOtpIds.add(otp.otp_id);
+
+                            const rateCommission = 0.018; // Default mikro-rate komisi
+
+                            // 1. Simpan ke CDR log Firebase
+                            const newLogRef = push(ref(db, `users/${currentUser.uid}/logs`));
+                            await set(newLogRef, {
+                                otp_id: otp.otp_id,
+                                number: otp.number,
+                                message: otp.message,
+                                time: otp.time || Date.now(),
+                                rate: rateCommission
+                            });
+
+                            // 2. Tambah Saldo User secara Realtime
+                            const balanceRef = ref(db, `users/${currentUser.uid}/balance`);
+                            await runTransaction(balanceRef, (curr) => (parseFloat(curr) || 0) + rateCommission);
+
+                            // Notifikasi audio / alert di layar
+                            console.log(`[REALTIME OTP MASUK]: ${otp.number} -> +$${rateCommission}`);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Polling Success-OTP Error:", err);
+            }
+        }
+
+        function startApiPolling() {
+            // Polling setiap 5 detik (sesuai cache limit provider)
+            pollSuccessOtp();
+            setInterval(pollSuccessOtp, 5000);
+        }
+
+        // ================= ENDPOINT 4: GET /console (Trafik Global 15 Menit) =================
+        async function loadGlobalConsole() {
+            const table = document.getElementById('globalConsoleTable');
+            try {
+                const res = await fetch(`${API_BASE}/console`, { headers: apiHeaders });
+                const json = await res.json();
+
+                if (json.meta && json.meta.code === 200 && json.data && json.data.hits) {
+                    table.innerHTML = '';
+                    json.data.hits.slice(0, 30).forEach(hit => {
+                        const date = new Date(hit.time).toLocaleTimeString();
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-slate-800/40";
+                        row.innerHTML = `
+                            <td class="py-3 px-5 text-slate-500">${date}</td>
+                            <td class="py-3 px-5 text-white font-bold font-mono">${hit.range}</td>
+                            <td class="py-3 px-5 text-indigo-400 font-sans font-semibold">${hit.sid}</td>
+                            <td class="py-3 px-5 text-slate-300 font-sans truncate max-w-xs">${hit.message}</td>
+                        `;
+                        table.appendChild(row);
+                    });
+                }
+            } catch (err) {
+                table.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-500 font-sans">Gagal memuat trafik console global.</td></tr>`;
+            }
+        }
+        document.getElementById('btnRefreshConsole').addEventListener('click', loadGlobalConsole);
+
+        // ================= PENARIKAN DANA (WITHDRAW) =================
+        document.getElementById('formWithdraw').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('wdAmount').value);
+            const method = document.getElementById('wdMethod').value;
+            const account = document.getElementById('wdAccount').value;
+
+            if (amount > currentBalance) {
+                alert("Saldo tidak mencukupi untuk penarikan ini.");
+                return;
+            }
+
+            const wdRef = push(ref(db, `users/${currentUser.uid}/withdrawals`));
+            await set(wdRef, { method, account, amount, timestamp: Date.now(), status: "PROCESSED" });
+
+            const balanceRef = ref(db, `users/${currentUser.uid}/balance`);
+            await runTransaction(balanceRef, (current) => (parseFloat(current) || 0) - amount);
+
+            alert(`Permintaan penarikan $${amount.toFixed(2)} berhasil diajukan!`);
+            document.getElementById('wdAmount').value = '';
+            document.getElementById('wdAccount').value = '';
+        });
+
+        // ================= DRAWER & TAB NAVIGATOR =================
+        const sidebar = document.getElementById('sidebarDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+
+        window.toggleDrawer = () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        };
+        document.getElementById('btnOpenDrawer').addEventListener('click', toggleDrawer);
+        document.getElementById('btnCloseDrawer').addEventListener('click', toggleDrawer);
+        overlay.addEventListener('click', toggleDrawer);
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(b => {
+                b.className = "nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60";
+            });
+            const activeNav = document.getElementById(`nav-${viewId}`);
+            if (activeNav) {
+                activeNav.className = "nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-white bg-slate-800 border border-slate-700/80 shadow-sm";
+            }
+        }
+
+        document.getElementById('nav-dashboard').addEventListener('click', () => showView('dashboard'));
+        document.getElementById('nav-ambil-nomor').addEventListener('click', () => showView('ambil-nomor'));
+        document.getElementById('nav-wallet').addEventListener('click', () => showView('wallet'));
+        document.getElementById('nav-console').addEventListener('click', () => { showView('console'); loadGlobalConsole(); });
+        document.getElementById('btnQuickWallet').addEventListener('click', () => showView('wallet'));
+    </script>
+</body>
+</html>

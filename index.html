@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numex IPRN — Platform Monetisasi SMS & Dynamic OTP Rates</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .radial-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.20) 0%, rgba(15, 23, 42, 0) 70%);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased overflow-x-hidden">
+
+    <!-- Ambient Glowing Background -->
+    <div class="fixed inset-0 pointer-events-none -z-10">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] radial-glow opacity-90"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-satellite-dish text-white text-base"></i>
+                </div>
+                <div class="leading-none">
+                    <span class="text-xl font-extrabold tracking-tight text-white">Numex<span class="text-emerald-400">IPRN</span></span>
+                    <span class="block text-[10px] text-slate-400 font-mono tracking-wider mt-0.5">DYNAMIC SMS TERMINATION</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#rate-card" class="hover:text-emerald-400 transition-colors">Live Rate Card</a>
+                <a href="#kalkulator" class="hover:text-emerald-400 transition-colors">Kalkulator Dinamis</a>
+                <a href="#mengapa-beda" class="hover:text-emerald-400 transition-colors">Struktur Rate</a>
+                <a href="#cara-kerja" class="hover:text-emerald-400 transition-colors">Cara Kerja</a>
+                <a href="#faq" class="hover:text-emerald-400 transition-colors">Bantuan</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <a href="auth.html?mode=login" class="text-sm font-semibold text-slate-300 hover:text-white transition-colors hidden sm:block">Masuk</a>
+                <a href="auth.html?mode=register" class="text-sm font-bold px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5">
+                    Mulai Hasilkan Saldo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-16 pb-20 md:pt-24 md:pb-28">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Content -->
+                <div class="lg:col-span-7 space-y-7 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-semibold tracking-wide">
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        100% GRATIS • RATE DINAMIS $0.008 – $0.038 / SMS
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12]">
+                        Terima Trafik SMS OTP, <br>
+                        <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">Dapatkan Revenue Mikro</span> Sesuai Rute Negara.
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Dapatkan bayaran per SMS masuk dengan perhitungan rate terminasi real-time. Mulai dari <strong>$0.010</strong>, <strong>$0.012</strong>, hingga <strong>$0.028+</strong> per OTP tergantung operator negara. Tanpa biaya sewa, saldo transparan dihitung per mili-dolar.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="auth.html?mode=register" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-center shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                            <span>Klaim Nomor Gratis Sekarang</span>
+                        </a>
+                        <a href="#kalkulator" class="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-700 hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 text-slate-300 font-semibold text-center transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-calculator text-emerald-400"></i>
+                            <span>Simulasi Penghasilan</span>
+                        </a>
+                    </div>
+
+                    <!-- Metrics -->
+                    <div class="pt-8 border-t border-slate-800 grid grid-cols-3 gap-6">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">$0.000</div>
+                            <div class="text-xs text-slate-400 mt-1">Biaya Setup & Pendaftaran</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">140+ Rute</div>
+                            <div class="text-xs text-slate-400 mt-1">Negara & Telco Carrier</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">USDT / IDR</div>
+                            <div class="text-xs text-slate-400 mt-1">Metode Multi-Payout</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Simulator: Dynamic CDR Feed -->
+                <div class="lg:col-span-5">
+                    <div class="relative mx-auto max-w-md">
+                        <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-emerald-500 to-indigo-500 opacity-20 blur-xl"></div>
+                        
+                        <div class="relative rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl space-y-5">
+                            
+                            <!-- Header Widget -->
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                                <div>
+                                    <div class="text-xs text-slate-400">Unbilled Revenue (Real-Time)</div>
+                                    <div class="text-2xl font-extrabold text-emerald-400 font-mono tracking-tight">$18.420 <span class="text-xs font-normal text-slate-400">(~Rp 294.720)</span></div>
+                                </div>
+                                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1.5 font-mono">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> CDR Stream
+                                </span>
+                            </div>
+
+                            <!-- Live Transaction Stream Simulator -->
+                            <div class="space-y-3">
+                                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex justify-between">
+                                    <span>Log Masuk OTP Terkini</span>
+                                    <span class="text-emerald-400">Rate Dinamis</span>
+                                </div>
+                                
+                                <div class="space-y-2.5 font-mono text-xs">
+                                    <!-- Log 1: Rate $0.018 -->
+                                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                                        <div class="space-y-0.5">
+                                            <div class="flex items-center gap-1.5 text-slate-200">
+                                                <span>🇬🇧 UK (+44)</span>
+                                                <span class="text-slate-600">•</span>
+                                                <span class="text-indigo-400 font-sans font-medium">WhatsApp OTP</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 font-sans">Pesan: [821-092] • 3 dtk lalu</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-emerald-400 font-bold font-mono">+$0.018</span>
+                                            <div class="text-[10px] text-slate-500">~Rp 288</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Log 2: Rate $0.012 -->
+                                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                                        <div class="space-y-0.5">
+                                            <div class="flex items-center gap-1.5 text-slate-200">
+                                                <span>🇺🇸 US (+1)</span>
+                                                <span class="text-slate-600">•</span>
+                                                <span class="text-indigo-400 font-sans font-medium">Google Verify</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 font-sans">Pesan: [G-440192] • 22 dtk lalu</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-emerald-400 font-bold font-mono">+$0.012</span>
+                                            <div class="text-[10px] text-slate-500">~Rp 192</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Log 3: Rate $0.010 -->
+                                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                                        <div class="space-y-0.5">
+                                            <div class="flex items-center gap-1.5 text-slate-200">
+                                                <span>🇮🇩 ID (+62)</span>
+                                                <span class="text-slate-600">•</span>
+                                                <span class="text-indigo-400 font-sans font-medium">Shopee OTP</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 font-sans">Pesan: [902114] • 1 mnt lalu</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-emerald-400 font-bold font-mono">+$0.010</span>
+                                            <div class="text-[10px] text-slate-500">~Rp 160</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Log 4: High Rate $0.026 -->
+                                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                                        <div class="space-y-0.5">
+                                            <div class="flex items-center gap-1.5 text-slate-200">
+                                                <span>🇩🇪 DE (+49)</span>
+                                                <span class="text-slate-600">•</span>
+                                                <span class="text-indigo-400 font-sans font-medium">Telegram Code</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 font-sans">Pesan: [55120] • 2 mnt lalu</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-emerald-400 font-bold font-mono">+$0.026</span>
+                                            <div class="text-[10px] text-slate-500">~Rp 416</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="auth.html?mode=register" class="block w-full text-center py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition-all">
+                                <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> Mulai Klaim Nomor Sekarang
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Rates Differ Section -->
+    <section id="mengapa-beda" class="py-16 bg-slate-900/30 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center space-y-3 mb-12">
+                <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase">Transparansi Industri Telekomunikasi</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Kenapa Payout Setiap Negara Berbeda-beda?</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Sama seperti sistem IPRN internasional, nilai komisi per SMS ditentukan oleh biaya interkoneksi operator seluler lokal, regulasi telekomunikasi tiap negara, dan tingkat permintaan rute (*traffic supply & demand*).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-xl bg-slate-950/70 border border-slate-800">
+                    <i class="fa-solid fa-network-wired text-emerald-400 text-xl mb-3"></i>
+                    <h3 class="font-bold text-white text-base mb-1">Rute Tier-1 Premium ($0.020 - $0.038)</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Negara seperti Jerman, UK, atau Belanda memiliki biaya terminasi operator yang tinggi, sehingga komisi yang dibagikan ke Anda per SMS jauh lebih besar.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-slate-950/70 border border-slate-800">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xl mb-3"></i>
+                    <h3 class="font-bold text-white text-base mb-1">Rute Standar Volume Tinggi ($0.012 - $0.018)</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Negara seperti AS atau Kanada memiliki tarif SMS terjangkau namun volume lalu lintas SMS-nya sangat masif dan datang tanpa henti.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-slate-950/70 border border-slate-800">
+                    <i class="fa-solid fa-bolt text-yellow-400 text-xl mb-3"></i>
+                    <h3 class="font-bold text-white text-base mb-1">Rute Regional Berkembang ($0.008 - $0.011)</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Negara seperti Indonesia, India, atau Filipina cocok untuk uji coba lokal dengan ambang verifikasi cepat dan penerimaan OTP instan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Searchable Live Rate Card -->
+    <section id="rate-card" class="py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                    <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase">Live Rate Table</span>
+                    <h2 class="text-3xl font-extrabold text-white">Daftar Rate Payout Real-Time</h2>
+                    <p class="text-slate-400 text-sm mt-1">Kurs estimasi: 1 USD = Rp 16.000</p>
+                </div>
+                <!-- Search Box -->
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Cari negara atau kode (+44, +1...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-500">
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300" id="rateTable">
+                        <thead class="bg-slate-950 text-slate-400 uppercase font-mono text-xs border-b border-slate-800">
+                            <tr>
+                                <th class="py-4 px-6">Negara & Kode</th>
+                                <th class="py-4 px-6">Tier Rute</th>
+                                <th class="py-4 px-6">Payout per OTP (USD)</th>
+                                <th class="py-4 px-6">Estimasi (IDR)</th>
+                                <th class="py-4 px-6">Status Trafik</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80 font-mono text-xs" id="tableBody">
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇩🇪</span> Germany (+49)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-indigo-400 font-medium">Tier-1 Direct</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.026</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 416</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-bold">Lancar 🔥</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇬🇧</span> United Kingdom (+44)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-indigo-400 font-medium">Tier-1 Premium</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.018</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 288</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-bold">Sangat Tinggi 🔥</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇳🇱</span> Netherlands (+31)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-indigo-400 font-medium">Tier-1 High</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.022</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 352</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-bold">Lancar</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇺🇸</span> United States (+1)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-slate-400 font-medium">Standard Route</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.012</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 192</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[11px] font-bold">Volume Besar</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇵🇭</span> Philippines (+63)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-slate-400 font-medium">Standard Route</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.014</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 224</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-[11px] font-bold">Stabil</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors country-row">
+                                <td class="py-4 px-6 font-sans font-semibold text-white flex items-center gap-3">
+                                    <span class="text-lg">🇮🇩</span> Indonesia (+62)
+                                </td>
+                                <td class="py-4 px-6 font-sans"><span class="text-slate-400 font-medium">Local Direct</span></td>
+                                <td class="py-4 px-6 font-bold text-emerald-400 text-sm">$0.010</td>
+                                <td class="py-4 px-6 text-slate-300">~Rp 160</td>
+                                <td class="py-4 px-6 font-sans"><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-[11px] font-bold">Stabil</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Calculator with Country Picker -->
+    <section id="kalkulator" class="py-20 bg-slate-900/40 border-y border-slate-800">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="rounded-3xl bg-slate-950 border border-slate-800 p-8 sm:p-12 shadow-2xl space-y-8">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase font-mono">Dynamic Multi-Route Calculator</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Hitung Simulasi Pendapatan Riil</h2>
+                    <p class="text-slate-400 text-sm">Pilih rute negara untuk mendapatkan estimasi komisi yang sesuai dengan rate terkini.</p>
+                </div>
+
+                <div class="space-y-6 pt-2">
+                    
+                    <!-- Country Selector -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-2">Pilih Negara / Rute Target:</label>
+                        <select id="countrySelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500 cursor-pointer">
+                            <option value="0.026" data-name="Germany (+49)">🇩🇪 Germany (+49) — $0.026 / OTP</option>
+                            <option value="0.018" data-name="UK (+44)" selected>🇬🇧 United Kingdom (+44) — $0.018 / OTP</option>
+                            <option value="0.022" data-name="Netherlands (+31)">🇳🇱 Netherlands (+31) — $0.022 / OTP</option>
+                            <option value="0.012" data-name="United States (+1)">🇺🇸 United States (+1) — $0.012 / OTP</option>
+                            <option value="0.014" data-name="Philippines (+63)">🇵🇭 Philippines (+63) — $0.014 / OTP</option>
+                            <option value="0.010" data-name="Indonesia (+62)">🇮🇩 Indonesia (+62) — $0.010 / OTP</option>
+                        </select>
+                    </div>
+
+                    <!-- Volume Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-sm mb-2">
+                            <span class="font-semibold text-slate-300">Estimasi Volume SMS Diterima / Hari:</span>
+                            <span class="font-mono text-xl font-bold text-emerald-400" id="smsCountDisplay">150 SMS</span>
+                        </div>
+                        <input type="range" min="20" max="2000" value="150" step="10" id="smsSlider" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    </div>
+
+                    <!-- Output Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-800/80">
+                        <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 text-center">
+                            <div class="text-xs uppercase text-slate-400 font-semibold mb-1">Estimasi Harian (USD & IDR)</div>
+                            <div class="text-3xl font-black text-white font-mono" id="dailyUSD">$2.70</div>
+                            <div class="text-xs text-slate-400 mt-1 font-mono" id="dailyIDR">~Rp 43.200</div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-emerald-950/40 border border-emerald-500/40 text-center">
+                            <div class="text-xs uppercase text-emerald-400 font-semibold mb-1">Proyeksi 30 Hari</div>
+                            <div class="text-3xl font-black text-emerald-400 font-mono" id="monthlyUSD">$81.00</div>
+                            <div class="text-xs text-emerald-300/80 mt-1 font-mono" id="monthlyIDR">~Rp 1.296.000</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <a href="auth.html?mode=register" class="inline-block px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm tracking-wide transition-all shadow-xl shadow-emerald-500/20">
+                            Buka Akun & Dapatkan Nomor Gratis
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works (3 Steps) -->
+    <section id="cara-kerja" class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto space-y-3 mb-16">
+                <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase">Alur Kerja Praktis</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Bagaimana Anda Mulai Menghasilkan?</h2>
+                <p class="text-slate-400 text-sm">Hanya butuh 3 langkah singkat untuk mengubah penerimaan SMS menjadi saldo rekening.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 relative">
+                    <span class="text-4xl font-black text-slate-800">01</span>
+                    <h3 class="text-lg font-bold text-white">Buat Akun & Ambil Nomor</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Daftar akun secara instan tanpa biaya sewa. Langsung pilih dan generate nomor virtual aktif dari daftar rute negara yang tersedia.
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 relative">
+                    <span class="text-4xl font-black text-slate-800">02</span>
+                    <h3 class="text-lg font-bold text-white">Terima SMS OTP Masuk</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Gunakan nomor untuk verifikasi WhatsApp, Telegram, Google, atau pengujian rute. Sistem membaca pesan secara otomatis dan instan.
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 relative">
+                    <span class="text-4xl font-black text-emerald-500/40">03</span>
+                    <h3 class="text-lg font-bold text-white">Cairkan Saldo Anda</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Komisi mikro ($0.010 - $0.026) langsung bertambah ke dompet Anda setiap kali pesan tiba. Tarik ke Rekening Bank atau USDT kapan saja.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-slate-900/30 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto px-6 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white text-center mb-10">Pertanyaan Umum (FAQ)</h2>
+            
+            <div class="space-y-4">
+                <details class="group rounded-xl bg-slate-900/60 border border-slate-800 p-5 cursor-pointer">
+                    <summary class="font-semibold text-white flex justify-between items-center list-none">
+                        <span>Apakah rate per negara bisa berubah-ubah sewaktu-waktu?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400 leading-relaxed">
+                        Ya. Rate mengikuti kondisi bursa terminasi SMS global. Terkadang rate UK bisa naik dari $0.016 ke $0.020 saat trafik sedang tinggi. Tabel di dashboard Anda akan selalu mengupdate rate paling baru secara otomatis.
+                    </p>
+                </details>
+
+                <details class="group rounded-xl bg-slate-900/60 border border-slate-800 p-5 cursor-pointer">
+                    <summary class="font-semibold text-white flex justify-between items-center list-none">
+                        <span>Berapa batas minimal penarikan dana (Withdrawal)?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400 leading-relaxed">
+                        Minimal penarikan sangat rendah, mulai dari <strong>$2.00 (sekitar Rp 32.000)</strong> untuk E-Wallet / Bank Lokal, atau <strong>5 USDT</strong> untuk penarikan kripto jaringan TRC20.
+                    </p>
+                </details>
+
+                <details class="group rounded-xl bg-slate-900/60 border border-slate-800 p-5 cursor-pointer">
+                    <summary class="font-semibold text-white flex justify-between items-center list-none">
+                        <span>Apakah benar-benar 100% gratis tanpa modal atau deposit?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400 leading-relaxed">
+                        Betul 100% gratis. Kami tidak pernah meminta biaya sewa bulanan atau deposit awal. Model bisnis kami adalah pembagian hasil (revenue share) dari operator pengirim SMS internasional.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-12 text-sm text-slate-400">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-950 font-bold">
+                    <i class="fa-solid fa-satellite-dish text-sm"></i>
+                </div>
+                <span class="text-lg font-bold text-white">Numex<span class="text-emerald-400">IPRN</span></span>
+            </div>
+            
+            <p class="text-xs text-center md:text-left">
+                &copy; 2026 Numex IPRN Hub. Global SMS Termination & Revenue Sharing Platform.
+            </p>
+
+            <div class="flex space-x-5 text-slate-400 text-lg">
+                <a href="#" class="hover:text-emerald-400 transition-colors"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" class="hover:text-emerald-400 transition-colors"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // 1. Calculator Logic with Variable Rates
+        const countrySelect = document.getElementById('countrySelect');
+        const smsSlider = document.getElementById('smsSlider');
+        const smsDisplay = document.getElementById('smsCountDisplay');
+        const dailyUSD = document.getElementById('dailyUSD');
+        const dailyIDR = document.getElementById('dailyIDR');
+        const monthlyUSD = document.getElementById('monthlyUSD');
+        const monthlyIDR = document.getElementById('monthlyIDR');
+
+        const USD_TO_IDR = 16000;
+
+        function calculateDynamicEarnings() {
+            const rate = parseFloat(countrySelect.value);
+            const count = parseInt(smsSlider.value);
+            
+            smsDisplay.innerText = `${count} SMS`;
+
+            const dayUSD = count * rate;
+            const monthUSD = dayUSD * 30;
+
+            const dayIDR = Math.round(dayUSD * USD_TO_IDR);
+            const monthIDR = Math.round(monthUSD * USD_TO_IDR);
+
+            dailyUSD.innerText = `$${dayUSD.toFixed(3)}`;
+            dailyIDR.innerText = `~Rp ${dayIDR.toLocaleString('id-ID')}`;
+
+            monthlyUSD.innerText = `$${monthUSD.toFixed(2)}`;
+            monthlyIDR.innerText = `~Rp ${monthIDR.toLocaleString('id-ID')}`;
+        }
+
+        countrySelect.addEventListener('change', calculateDynamicEarnings);
+        smsSlider.addEventListener('input', calculateDynamicEarnings);
+        calculateDynamicEarnings();
+
+        // 2. Instant Search Table Filter
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('.country-row');
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

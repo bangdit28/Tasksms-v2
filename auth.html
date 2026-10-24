@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk & Daftar — Numex IPRN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="w-full max-w-md relative z-10">
+        <div class="text-center mb-8">
+            <a href="index.html" class="inline-flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-satellite-dish text-white text-base"></i>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight text-white">Numex<span class="text-emerald-400">IPRN</span></span>
+            </a>
+            <p class="text-xs text-slate-400 mt-2">Sistem Autentikasi Cloud Terintegrasi Firebase</p>
+        </div>
+
+        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+            <!-- Tab Switcher -->
+            <div class="grid grid-cols-2 p-1 bg-slate-950 rounded-xl mb-6 border border-slate-800 text-xs font-bold">
+                <button id="tabLogin" class="py-2.5 rounded-lg text-white bg-slate-800 shadow">Masuk Akun</button>
+                <button id="tabRegister" class="py-2.5 rounded-lg text-slate-400 hover:text-white">Daftar Baru</button>
+            </div>
+
+            <!-- Error Notification Alert -->
+            <div id="errorAlert" class="hidden mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium"></div>
+
+            <!-- FORM LOGIN -->
+            <form id="formLogin" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Alamat Email</label>
+                    <input type="email" id="loginEmail" required placeholder="nama@email.com" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Kata Sandi</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button type="submit" id="btnLogin" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20">
+                    Masuk ke Dashboard
+                </button>
+            </form>
+
+            <!-- FORM REGISTER -->
+            <form id="formRegister" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Nama Lengkap / Username</label>
+                    <input type="text" id="regName" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Alamat Email</label>
+                    <input type="email" id="regEmail" required placeholder="nama@email.com" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Kata Sandi Baru</label>
+                    <input type="password" id="regPassword" required minlength="6" placeholder="Minimal 6 karakter" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button type="submit" id="btnRegister" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20">
+                    Buat Akun & Dapatkan Saldo
+                </button>
+            </form>
+
+            <div class="mt-6 pt-6 border-t border-slate-800 text-center">
+                <a href="index.html" class="text-xs text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Halaman Depan
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Authentication Script -->
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import { 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        // Tab Switcher
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const formLogin = document.getElementById('formLogin');
+        const formRegister = document.getElementById('formRegister');
+        const errorAlert = document.getElementById('errorAlert');
+
+        function showError(msg) {
+            errorAlert.innerText = msg;
+            errorAlert.classList.remove('hidden');
+        }
+
+        tabLogin.addEventListener('click', () => {
+            tabLogin.className = "py-2.5 rounded-lg text-white bg-slate-800 shadow";
+            tabRegister.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
+            formLogin.classList.remove('hidden');
+            formRegister.classList.add('hidden');
+            errorAlert.classList.add('hidden');
+        });
+
+        tabRegister.addEventListener('click', () => {
+            tabRegister.className = "py-2.5 rounded-lg text-white bg-slate-800 shadow";
+            tabLogin.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
+            formRegister.classList.remove('hidden');
+            formLogin.classList.add('hidden');
+            errorAlert.classList.add('hidden');
+        });
+
+        // 1. Proses Registrasi Firebase
+        formRegister.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnRegister');
+            btn.disabled = true;
+            btn.innerText = "Mendaftarkan...";
+            errorAlert.classList.add('hidden');
+
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCred.user;
+
+                // Setup saldo & profil awal di Realtime Database
+                await set(ref(db, `users/${user.uid}`), {
+                    username: name,
+                    email: email,
+                    balance: 0.000, // Saldo awal $0
+                    createdAt: Date.now()
+                });
+
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showError("Gagal Mendaftar: " + err.message);
+                btn.disabled = false;
+                btn.innerText = "Buat Akun & Dapatkan Saldo";
+            }
+        });
+
+        // 2. Proses Login Firebase
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true;
+            btn.innerText = "Memverifikasi...";
+            errorAlert.classList.add('hidden');
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showError("Gagal Masuk: Email atau kata sandi tidak valid.");
+                btn.disabled = false;
+                btn.innerText = "Masuk ke Dashboard";
+            }
+        });
+    </script>
+</body>
+</html>
